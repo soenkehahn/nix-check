@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+
+import sys
+
+sys.argv.reverse()
+sys.argv.pop()
+if ("--help" in sys.argv):
+    print("""
+nix-check: a simple tool to run all checks for a nix flake
+usage: nix-check
+    """)
+    exit(0)
+
+print(rest)
+
+# nix flake show --json | jq '.checks | keys'
+# jq --help
