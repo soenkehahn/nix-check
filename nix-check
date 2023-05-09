@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import sys
+import subprocess
+import json
 
 sys.argv.reverse()
 sys.argv.pop()
@@ -11,7 +13,20 @@ usage: nix-check
     """)
     exit(0)
 
-print(rest)
-
-# nix flake show --json | jq '.checks | keys'
-# jq --help
+system = subprocess.check_output([
+    "nix",
+    "eval",
+    "--impure",
+    "--raw",
+    "--expr",
+    "builtins.currentSystem"
+]).decode("utf-8")
+flake = json.loads(subprocess.check_output(["nix", "flake", "show", "--json"]))
+checks = dict.keys(flake["checks"][system])
+checkSelectors = [f".#checks.{system}.{check}" for check in checks]
+print("Running the following checks:")
+for selector in checkSelectors:
+    print(selector)
+for selector in checkSelectors:
+    print(f"Running {selector}...")
+    subprocess.run(["nix", "-L", "build", selector])

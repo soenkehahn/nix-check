@@ -8,7 +8,7 @@
       with pkgs;
       rec {
         packages.default =
-          let runtimeInputs = [ python3 jq ];
+          let runtimeInputs = [ python3 ];
           in runCommand "nix-check"
             {
               buildInputs = [ makeWrapper ];
